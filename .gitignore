@@ -2,6 +2,7 @@
 # VS Generated File #
 #####################
 *.VC.db
+*.ipch
 
 #########################
 # Unreal Generated File #
