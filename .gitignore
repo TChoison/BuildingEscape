@@ -3,6 +3,7 @@
 #####################
 *.VC.db
 *.ipch
+*.VC.opendb
 
 #########################
 # Unreal Generated File #
