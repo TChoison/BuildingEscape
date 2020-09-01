@@ -18,7 +18,10 @@ UOpenDoor::UOpenDoor()
 void UOpenDoor::BeginPlay()
 {
 	Super::BeginPlay();
+}
 
+void UOpenDoor::OpenDoor()
+{
 	AActor* Owner = GetOwner();
 	// ways to set rotation:
 	FRotator OwnerRotator = FRotator(0.f, -80.f, 0.f);
@@ -26,12 +29,12 @@ void UOpenDoor::BeginPlay()
 	//FQuat OwnerQuat = { 30, 30, 30, 30 };
 	//Owner->SetActorRotation(OwnerQuat);
 
-	// ways to get rotation:
-	FString OwnerRotation = "";
-	OwnerRotation = Owner->GetActorRotation().ToString();
-	UE_LOG(LogTemp, Warning, TEXT("rotation is %s"), *OwnerRotation); // same as editor
-	OwnerRotation = Owner->GetTransform().GetRotation().ToString();
-	UE_LOG(LogTemp, Warning, TEXT("rotation2 is %s"), *OwnerRotation); // quite strange
+	//// ways to get rotation:
+	//FString OwnerRotation = "";
+	//OwnerRotation = Owner->GetActorRotation().ToString();
+	//UE_LOG(LogTemp, Warning, TEXT("rotation is %s"), *OwnerRotation); // same as editor
+	//OwnerRotation = Owner->GetTransform().GetRotation().ToString();
+	//UE_LOG(LogTemp, Warning, TEXT("rotation2 is %s"), *OwnerRotation); // quite strange
 }
 
 
@@ -40,6 +43,9 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
+	if (PressurePlate && PressurePlate->IsOverlappingActor(ActorWhoOpenDoor))
+	{
+		OpenDoor();
+	}
 }
 
