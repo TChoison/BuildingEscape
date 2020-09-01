@@ -10,7 +10,6 @@ UOpenDoor::UOpenDoor()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	// ...
 }
 
 
@@ -18,6 +17,19 @@ UOpenDoor::UOpenDoor()
 void UOpenDoor::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (!GetWorld()->GetFirstPlayerController())
+	{
+		UE_LOG(LogTemp, Error, TEXT("cannot get player controller"));
+	}
+	else if (!GetWorld()->GetFirstPlayerController()->GetPawn())
+	{
+		UE_LOG(LogTemp, Error, TEXT("cannot get pawn"))
+	}
+	else
+	{
+	ActorWhoOpenDoor = GetWorld()->GetFirstPlayerController()->GetPawn();
+	}
 }
 
 void UOpenDoor::OpenDoor()
