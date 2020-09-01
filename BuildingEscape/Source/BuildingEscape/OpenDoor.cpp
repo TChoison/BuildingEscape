@@ -18,6 +18,8 @@ void UOpenDoor::BeginPlay()
 {
 	Super::BeginPlay();
 
+	Owner = GetOwner();
+
 	if (!GetWorld()->GetFirstPlayerController())
 	{
 		UE_LOG(LogTemp, Error, TEXT("cannot get player controller"));
@@ -30,14 +32,14 @@ void UOpenDoor::BeginPlay()
 	{
 	ActorWhoOpenDoor = GetWorld()->GetFirstPlayerController()->GetPawn();
 	}
+
+	UE_LOG(LogTemp, Warning, TEXT("Delay time is set to %f"), DelayTime);
 }
 
 void UOpenDoor::OpenDoor()
 {
-	AActor* Owner = GetOwner();
 	// ways to set rotation:
-	FRotator OwnerRotator = FRotator(0.f, -80.f, 0.f);
-	Owner->SetActorRotation(OwnerRotator);
+	Owner->SetActorRotation(FRotator(0.f, OpenAngle, 0.f));
 	//FQuat OwnerQuat = { 30, 30, 30, 30 };
 	//Owner->SetActorRotation(OwnerQuat);
 
@@ -49,6 +51,11 @@ void UOpenDoor::OpenDoor()
 	//UE_LOG(LogTemp, Warning, TEXT("rotation2 is %s"), *OwnerRotation); // quite strange
 }
 
+void UOpenDoor::CloseDoor()
+{
+	Owner->SetActorRotation(FRotator(0.f, 0.f, 0.f));
+}
+
 
 // Called every frame
 void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -58,6 +65,14 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 	if (PressurePlate && PressurePlate->IsOverlappingActor(ActorWhoOpenDoor))
 	{
 		OpenDoor();
+		LastOpenTime = GetWorld()->GetTimeSeconds();
+		UE_LOG(LogTemp, Warning, TEXT("Open Door at time: %f"), LastOpenTime);
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("what is the value of LastOpenTime %f"), LastOpenTime);
+	if (GetWorld()->GetTimeSeconds() - LastOpenTime > DelayTime)
+	{
+		CloseDoor();
 	}
 }
 
