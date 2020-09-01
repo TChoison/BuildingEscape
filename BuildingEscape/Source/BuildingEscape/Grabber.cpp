@@ -3,6 +3,8 @@
 
 #include "Grabber.h"
 
+#define OUT
+
 // Sets default values for this component's properties
 UGrabber::UGrabber()
 {
@@ -29,6 +31,25 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
+	// get player view point
+	FVector PlayerLocation;
+	FRotator PlayerRotation;
+	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(
+		OUT PlayerLocation,
+		OUT PlayerRotation
+	);
+
+	FVector LineTraceEnd = PlayerLocation + PlayerRotation.Vector() * Reach;
+
+	DrawDebugLine(
+		GetWorld(),
+		PlayerLocation,
+		LineTraceEnd,
+		FColor(0, 0, 255),
+		false,
+		0.f,
+		0,
+		10.f
+	);
 }
 
