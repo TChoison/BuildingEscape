@@ -5,6 +5,7 @@
 *.ipch
 *.VC.opendb
 *.suo
+*.sln
 
 #########################
 # Unreal Generated File #
