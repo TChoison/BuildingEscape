@@ -54,12 +54,26 @@ void UGrabber::SetInputComponent()
 void UGrabber::Grab()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Grab pressed"))
-	GetHitResult();
+	auto HitResult = GetHitResult();
+	auto ComponentToGrab = HitResult.GetComponent();
+	// grab object if we hit something
+	if (HitResult.GetActor())
+	{
+		PhysicsHandle->GrabComponentAtLocationWithRotation(
+			ComponentToGrab,
+			NAME_None,
+			ComponentToGrab->GetOwner()->GetActorLocation(),
+			ComponentToGrab->GetOwner()->GetActorRotation()
+		);
+	}
 }
 
 void UGrabber::Release()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Grab released"))
+
+	// release the object we are grabbing
+	PhysicsHandle->ReleaseComponent();
 }
 
 
@@ -67,6 +81,18 @@ void UGrabber::Release()
 void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	FVector PlayerLocation;
+	FRotator PlayerRotation;
+	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(
+		OUT PlayerLocation,
+		OUT PlayerRotation
+	);
+	FVector LineTraceEnd = PlayerLocation + PlayerRotation.Vector() * Reach;
+
+
+	// move the component when grabbing it
+	PhysicsHandle->SetTargetLocation(LineTraceEnd);
 }
 
 FHitResult UGrabber::GetHitResult() const
@@ -78,8 +104,8 @@ FHitResult UGrabber::GetHitResult() const
 		OUT PlayerLocation,
 		OUT PlayerRotation
 	);
-
 	FVector LineTraceEnd = PlayerLocation + PlayerRotation.Vector() * Reach;
+
 	FHitResult Hit;
 	FCollisionQueryParams QueryParams(FName(TEXT("")), false, GetOwner());
 
