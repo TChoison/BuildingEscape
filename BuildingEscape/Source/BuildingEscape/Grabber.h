@@ -51,5 +51,11 @@ private:
 	void SetInputComponent();
 
 	// get line trace hit result
-	FHitResult GetHitResult() const;
+	const FHitResult GetHitResult();
+
+	// return start location of trace line
+	FVector GetTraceLineStart();
+
+	// return end location of trace line
+	FVector GetTraceLineEnd();
 };
