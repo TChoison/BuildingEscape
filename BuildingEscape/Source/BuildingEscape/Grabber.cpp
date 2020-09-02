@@ -41,6 +41,7 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 
 	FVector LineTraceEnd = PlayerLocation + PlayerRotation.Vector() * Reach;
 
+	// draw a trace line
 	DrawDebugLine(
 		GetWorld(),
 		PlayerLocation,
@@ -51,5 +52,24 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 		0,
 		10.f
 	);
-}
 
+	FHitResult Hit;
+	FCollisionQueryParams QueryParams(FName(TEXT("")), false, GetOwner());
+	// line tracing (AKA ray-casting)
+	GetWorld()->LineTraceSingleByObjectType(
+		Hit,
+		PlayerLocation,
+		LineTraceEnd,
+		FCollisionObjectQueryParams(ECollisionChannel::ECC_PhysicsBody),
+		QueryParams
+	);
+	AActor* HitActor = Hit.GetActor();
+	if (HitActor)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("hit result is %s"), *(HitActor->GetName()));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("%s hit nothing"), *(GetOwner()->GetName()));
+	}
+}
