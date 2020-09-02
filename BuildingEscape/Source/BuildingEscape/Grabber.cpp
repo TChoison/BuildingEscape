@@ -20,8 +20,15 @@ UGrabber::UGrabber()
 void UGrabber::BeginPlay()
 {
 	Super::BeginPlay();
-
-	UE_LOG(LogTemp, Warning, TEXT("Grabber logging duty!"));
+	
+	if (GetOwner()->FindComponentByClass<UPhysicsHandleComponent>())
+	{
+		// TODO
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("cannot find physics handler in %s"), *GetOwner()->GetName());
+	}
 	
 }
 
@@ -70,6 +77,6 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("%s hit nothing"), *(GetOwner()->GetName()));
+		//UE_LOG(LogTemp, Warning, TEXT("%s hit nothing"), *(GetOwner()->GetName()));
 	}
 }

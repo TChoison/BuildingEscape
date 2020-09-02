@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "DrawDebugHelpers.h"
+#include "PhysicsEngine/PhysicsHandleComponent.h"
 #include "Grabber.generated.h"
 
 
@@ -28,4 +29,6 @@ public:
 private:
 	// set debug line length
 	float Reach = 100.f;
+
+	UPhysicsHandleComponent* PysicesHandle = nullptr;
 };

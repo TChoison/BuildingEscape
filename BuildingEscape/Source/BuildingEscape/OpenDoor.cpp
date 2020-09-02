@@ -33,7 +33,7 @@ void UOpenDoor::BeginPlay()
 	ActorWhoOpenDoor = GetWorld()->GetFirstPlayerController()->GetPawn();
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("Delay time is set to %f"), DelayTime);
+	//UE_LOG(LogTemp, Warning, TEXT("Delay time is set to %f"), DelayTime);
 }
 
 void UOpenDoor::OpenDoor()
