@@ -11,8 +11,6 @@ UGrabber::UGrabber()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
 }
 
 
@@ -21,6 +19,12 @@ void UGrabber::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	SetAPhysicsHandleComponent();
+	SetInputComponent();
+}
+
+void UGrabber::SetAPhysicsHandleComponent()
+{
 	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
 	if (PhysicsHandle)
 	{
@@ -30,7 +34,10 @@ void UGrabber::BeginPlay()
 	{
 		UE_LOG(LogTemp, Error, TEXT("cannot find physics handler in %s"), *GetOwner()->GetName());
 	}
+}
 
+void UGrabber::SetInputComponent()
+{
 	InputComponent = GetOwner()->FindComponentByClass<UInputComponent>();
 	if (InputComponent)
 	{
@@ -42,14 +49,12 @@ void UGrabber::BeginPlay()
 	{
 		UE_LOG(LogTemp, Error, TEXT("cannot find Input component in %s"), *GetOwner()->GetName());
 	}
-
-
-	
 }
 
 void UGrabber::Grab()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Grab pressed"))
+	GetHitResult();
 }
 
 void UGrabber::Release()
@@ -62,7 +67,10 @@ void UGrabber::Release()
 void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+}
 
+FHitResult UGrabber::GetHitResult() const
+{
 	// get player view point
 	FVector PlayerLocation;
 	FRotator PlayerRotation;
@@ -72,21 +80,9 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	);
 
 	FVector LineTraceEnd = PlayerLocation + PlayerRotation.Vector() * Reach;
-
-	// draw a trace line
-	DrawDebugLine(
-		GetWorld(),
-		PlayerLocation,
-		LineTraceEnd,
-		FColor(0, 0, 255),
-		false,
-		0.f,
-		0,
-		10.f
-	);
-
 	FHitResult Hit;
 	FCollisionQueryParams QueryParams(FName(TEXT("")), false, GetOwner());
+
 	// line tracing (AKA ray-casting)
 	GetWorld()->LineTraceSingleByObjectType(
 		Hit,
@@ -104,4 +100,6 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	{
 		//UE_LOG(LogTemp, Warning, TEXT("%s hit nothing"), *(GetOwner()->GetName()));
 	}
+
+	return Hit;
 }

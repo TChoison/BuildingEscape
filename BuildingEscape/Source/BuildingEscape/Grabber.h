@@ -23,9 +23,13 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+	void SetPhysicsHandleComponent();
+
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+	void GetHitResults();
 
 private:
 	// set debug line length
@@ -34,6 +38,18 @@ private:
 	UPhysicsHandleComponent* PhysicsHandle = nullptr;
 	UInputComponent* InputComponent = nullptr;
 
+	// Ray cast and grab what is in reach
 	void Grab();
+
+	// Called when grab is released
 	void Release();
+
+	// set attached physics handle component
+	void SetAPhysicsHandleComponent();
+
+	// set attached Input component
+	void SetInputComponent();
+
+	// get line trace hit result
+	FHitResult GetHitResult() const;
 };
