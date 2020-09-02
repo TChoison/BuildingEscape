@@ -21,7 +21,8 @@ void UGrabber::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	if (GetOwner()->FindComponentByClass<UPhysicsHandleComponent>())
+	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
+	if (PhysicsHandle)
 	{
 		// TODO
 	}
@@ -29,7 +30,23 @@ void UGrabber::BeginPlay()
 	{
 		UE_LOG(LogTemp, Error, TEXT("cannot find physics handler in %s"), *GetOwner()->GetName());
 	}
+
+	InputComponent = GetOwner()->FindComponentByClass<UInputComponent>();
+	if (InputComponent)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("find input component"));
+		InputComponent->BindAction("Grab", IE_Pressed, this, &UGrabber::Grab);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("cannot find Input component in %s"), *GetOwner()->GetName());
+	}
 	
+}
+
+void UGrabber::Grab()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Grab pressed"));
 }
 
 
