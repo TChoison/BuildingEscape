@@ -53,6 +53,7 @@ void UGrabber::Grab()
 	auto ComponentToGrab = HitResult.GetComponent();
 	if (HitResult.GetActor())
 	{
+		if (!PhysicsHandle) { return; }
 		PhysicsHandle->GrabComponentAtLocationWithRotation(
 			ComponentToGrab,
 			NAME_None, // no bone to set
@@ -65,6 +66,7 @@ void UGrabber::Grab()
 // release the object we are grabbing
 void UGrabber::Release()
 {
+	if (!PhysicsHandle) { return; }
 	PhysicsHandle->ReleaseComponent();
 }
 
@@ -75,6 +77,7 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// move the component when grabbing it
+	if (!PhysicsHandle) { return; }
 	PhysicsHandle->SetTargetLocation(GetTraceLineEnd());
 }
 

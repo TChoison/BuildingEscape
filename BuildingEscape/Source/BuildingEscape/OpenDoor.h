@@ -37,9 +37,9 @@ private:
 	float DelayTime;
 
 	UPROPERTY(EditAnywhere)
-	ATriggerVolume* PressurePlate;
+	ATriggerVolume* PressurePlate = nullptr;
 
-	AActor* Owner;
+	AActor* Owner = nullptr;
 	float LastOpenTime;
 
 	// return total mass over pressure plate
