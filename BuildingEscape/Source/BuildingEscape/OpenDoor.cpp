@@ -19,36 +19,11 @@ void UOpenDoor::BeginPlay()
 	Super::BeginPlay();
 
 	Owner = GetOwner();
-
-	if (!GetWorld()->GetFirstPlayerController())
-	{
-		UE_LOG(LogTemp, Error, TEXT("cannot get player controller"));
-	}
-	else if (!GetWorld()->GetFirstPlayerController()->GetPawn())
-	{
-		UE_LOG(LogTemp, Error, TEXT("cannot get pawn"))
-	}
-	else
-	{
-	ActorWhoOpenDoor = GetWorld()->GetFirstPlayerController()->GetPawn();
-	}
-
-	//UE_LOG(LogTemp, Warning, TEXT("Delay time is set to %f"), DelayTime);
 }
 
 void UOpenDoor::OpenDoor()
 {
-	// ways to set rotation:
 	Owner->SetActorRotation(FRotator(0.f, OpenAngle, 0.f));
-	//FQuat OwnerQuat = { 30, 30, 30, 30 };
-	//Owner->SetActorRotation(OwnerQuat);
-
-	//// ways to get rotation:
-	//FString OwnerRotation = "";
-	//OwnerRotation = Owner->GetActorRotation().ToString();
-	//UE_LOG(LogTemp, Warning, TEXT("rotation is %s"), *OwnerRotation); // same as editor
-	//OwnerRotation = Owner->GetTransform().GetRotation().ToString();
-	//UE_LOG(LogTemp, Warning, TEXT("rotation2 is %s"), *OwnerRotation); // quite strange
 }
 
 void UOpenDoor::CloseDoor()
@@ -62,7 +37,7 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	if (PressurePlate && PressurePlate->IsOverlappingActor(ActorWhoOpenDoor))
+	if (GetOverlapMass() > 25.f)
 	{
 		OpenDoor();
 		LastOpenTime = GetWorld()->GetTimeSeconds();
@@ -72,5 +47,19 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 	{
 		CloseDoor();
 	}
+}
+
+float UOpenDoor::GetOverlapMass()
+{
+	float TotalMass = 0.f;
+	TArray<AActor*> OverlapActors;
+	PressurePlate->GetOverlappingActors(OverlapActors);
+	for (auto* actor : OverlapActors)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("name of actor is: %s"), *actor->GetName())
+		TotalMass += actor->FindComponentByClass<UPrimitiveComponent>()->GetMass();
+	}
+
+	return TotalMass;
 }
 

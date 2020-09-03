@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Components/PrimitiveComponent.h"
 #include "Engine/TriggerVolume.h"
 #include "OpenDoor.generated.h"
 
@@ -38,7 +39,9 @@ private:
 	UPROPERTY(EditAnywhere)
 	ATriggerVolume* PressurePlate;
 
-	AActor* ActorWhoOpenDoor;
 	AActor* Owner;
 	float LastOpenTime;
+
+	// return total mass over pressure plate
+	float GetOverlapMass();
 };
