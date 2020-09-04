@@ -10,6 +10,7 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnOpenRequest);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCloseRequest);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDoorOpen);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class BUILDINGESCAPE_API UOpenDoor : public UActorComponent
@@ -46,6 +47,9 @@ private:
 
 	UPROPERTY(BlueprintAssignable)
 	FOnCloseRequest OnCloseRequest;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnDoorOpen OnDoorOpen;
 
 	AActor* Owner = nullptr;
 	float LastOpenTime;

@@ -34,6 +34,7 @@ void UOpenDoor::OpenDoor()
 
 void UOpenDoor::CloseDoor()
 {
+	OnDoorOpen.Broadcast();
 	OnCloseRequest.Broadcast();
 	//Owner->SetActorRotation(FRotator(0.f, 0.f, 0.f));
 }
